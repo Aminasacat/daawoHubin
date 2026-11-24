@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DaawoHubin - nidaamka la socodka tayada, xaqiijinta iyo dhicitaanka dawooyinka.">
+  <title>DaawoHubin | Daawooyin la hubiyey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#"><span class="brand-mark">✚</span><span>Daawo<span class="brand-light">Hubin</span><small>MEDICINE SAFETY SYSTEM</small></span></a>
+    <div class="side-label">MENU</div>
+    <nav>
+      <button class="nav-link active" data-page="dashboard"><span>▦</span> Guudmar</button>
+      <button class="nav-link" data-page="medicines"><span>▤</span> Dawooyinka</button>
+      <button class="nav-link" data-page="verify"><span>✓</span> Xaqiiji daawo</button>
+      <button class="nav-link" data-page="expiry"><span>◷</span> Dhicitaanka</button>
+      <button class="nav-link" data-page="reports"><span>▥</span> Warbixinno</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="help-card"><div class="help-icon">ⓘ</div><b>Badbaadada bukaanka</b><p>Hubi xogta daawada ka hor inta aan la isticmaalin.</p><button data-page="verify">Bilow hubinta →</button></div><div class="profile"><div class="avatar">DH</div><div><b>Maamulaha</b><small>Administrator</small></div><span class="online-dot"></span></div></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><button class="mobile-menu" id="menuToggle">☰</button><div><div class="eyebrow" id="todayLabel">DAAWOHUBIN / MAANTA</div><h1 id="pageTitle">Guudmar</h1></div><div class="top-actions"><span class="system-status"><i></i> System online</span><button class="icon-btn" id="notificationBtn" aria-label="Ogeysiisyada">♧<em id="alertCount">0</em></button><div class="top-avatar">DH</div></div></header>
+    <section class="page active" id="page-dashboard">
+      <div class="welcome-banner"><div><span class="banner-tag">NIDAAMKA BADBAADADA DAAWOOYINKA</span><h2>Daawo sax ah. <span>Bukaan badbaado qaba.</span></h2><p>La soco dawooyinka, hubi xaaladdooda, kana digtoonow kuwa dhacay ama laga shakiyo.</p><button class="btn btn-white" data-page="verify">Xaqiiji daawo <span>→</span></button></div><div class="banner-art"><img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=900&q=85" alt="Dawooyin iyo qalabka farmashiyaha"></div><div class="banner-orb"></div></div>
+      <div class="section-heading"><div><h3>Xogta guud</h3><p>Aragti kooban oo ku saabsan kaydka dawooyinka.</p></div><span class="muted-note">Xogta browser-kan</span></div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span>Wadarta dawooyinka</span><span class="stat-icon blue">▤</span></div><strong id="statTotal">0</strong><small><i class="trend">↗</i> Dawooyin ku jira kaydka</small></article>
+        <article class="stat-card"><div class="stat-top"><span>La xaqiijiyey</span><span class="stat-icon green">✓</span></div><strong id="statVerified">0</strong><small>Diyaar u ah hubin dheeraad ah</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Dhacay</span><span class="stat-icon red">!</span></div><strong id="statExpired">0</strong><small class="danger-text">Ha isticmaalin dawo dhacday</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Laga shakisan yahay</span><span class="stat-icon amber">⌕</span></div><strong id="statFake">0</strong><small>U baahan baaritaan</small></article>
+      </div>
+      <div class="content-grid">
+        <section class="panel"><div class="panel-head"><div><h3>Dawooyinka u dhow dhicitaanka</h3><p>Waa in si degdeg ah loo eego.</p></div><button class="text-btn" data-page="expiry">Dhammaan →</button></div><div id="dashboardExpiry" class="table-wrap"></div></section>
+        <section class="panel safety-panel"><div class="panel-head"><div><h3>Hagaha badbaadada</h3><p>Tallaabooyin muhiim ah</p></div><span class="shield">✓</span></div><div class="safety-item"><span class="safety-number">01</span><div><b>Hubi baakadka</b><p>Eeg shaabadda, summadda iyo qoraalka.</p></div></div><div class="safety-item"><span class="safety-number">02</span><div><b>Isbarbar dhig lambarka batch-ka</b><p>La xiriir shirkadda ama hay'adda daawooyinka.</p></div></div><div class="safety-item"><span class="safety-number">03</span><div><b>Fiiri taariikhda dhicitaanka</b><p>Ha iibin hana isticmaalin dawo dhacday.</p></div></div><div class="safety-foot">ⓘ Xaqiijinta rasmiga ah waxay u baahan tahay xog hay'ad sharciyeysan.</div></section>
+      </div>
+    </section>
+    <section class="page" id="page-medicines">
+      <div class="section-heading"><div><h3>Kaydka dawooyinka</h3><p>Ku dar, raadi, wax ka beddel ama ka saar dawooyinka.</p></div><button class="btn btn-primary" id="addMedicineBtn">＋ Ku dar daawo</button></div>
+      <div class="toolbar"><div class="search-box"><span>⌕</span><input id="medicineSearch" placeholder="Raadi magaca, shirkadda ama batch..."></div><select id="statusFilter"><option value="all">Dhammaan xaaladaha</option><option value="verified">La xaqiijiyey</option><option value="suspicious">Laga shakisan yahay</option><option value="expired">Dhacay</option></select></div>
+      <section class="panel"><div id="medicineTable" class="table-wrap"></div></section>
+    </section>
+    <section class="page" id="page-verify">
+      <div class="verify-layout"><div class="verify-intro"><span class="banner-tag">MEDICINE AUTHENTICITY CHECK</span><h2>Hubi daawada<br><span>ka hor isticmaalka.</span></h2><p>Geli magaca daawada iyo xogta baakadka si aad u samayso hubin hordhac ah.</p><img src="https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=900&q=85" alt="Kiniinno iyo daawooyin"></div>
+      <div class="panel verify-form-panel"><div class="panel-head"><div><h3>Xogta daawada</h3><p>Buuxi xogta ku qoran baakadka.</p></div><span class="form-step">01 / 01</span></div>
+        <form id="verifyForm"><label>Magaca daawada <span>*</span><input name="name" required placeholder="Tusaale: Paracetamol 500mg"></label><div class="form-row"><label>Batch / Lot number <span>*</span><input name="batch" required placeholder="Tusaale: BTH-2026-01"></label><label>Shirkadda samaysay<input name="manufacturer" placeholder="Magaca shirkadda"></label></div><div class="form-row"><label>Taariikhda dhicitaanka <span>*</span><input name="expiry" type="date" required></label><label>Farmashiyaha / Isha<input name="source" placeholder="Magaca farmashiyaha"></label></div><label>Serial / QR code (ikhtiyaari)<input name="serial" placeholder="Geli lambarka ku qoran baakadka"></label><button class="btn btn-primary full-btn" type="submit">Bilaaw hubinta <span>→</span></button><p class="form-disclaimer">Hubintani waa demo ku salaysan xogta ku jirta system-ka. Ma xaqiijin karto daawo dhab ah ama been-abuur ah iyada oo aan lala xiriirin diiwaanka rasmiga ah.</p></form><div id="verifyResult" class="verify-result hidden"></div>
+      </div></div>
+    </section>
+    <section class="page" id="page-expiry"><div class="section-heading"><div><h3>La socodka dhicitaanka</h3><p>Dawooyinka dhacay iyo kuwa ku dhow inay dhacaan.</p></div><span class="date-chip">◷ La cusboonaysiiyo maanta</span></div><div class="expiry-summary" id="expirySummary"></div><section class="panel"><div class="panel-head"><div><h3>Liiska dhicitaanka</h3><p>Ku kala hormarsan taariikhda dhicitaanka.</p></div></div><div id="expiryTable" class="table-wrap"></div></section></section>
+    <section class="page" id="page-reports"><div class="section-heading"><div><h3>Warbixinno</h3><p>Kooban xogta kaydka iyo xaaladda dawooyinka.</p></div><button class="btn btn-primary" id="exportBtn">↓ Soo dejiso CSV</button></div><div class="report-grid"><div class="panel report-chart"><div class="panel-head"><div><h3>Xaaladda dawooyinka</h3><p>Qaybinta kaydka hadda jira</p></div></div><div id="reportBars"></div></div><div class="panel report-note"><div class="stat-icon green">✓</div><h3>Warbixinta badbaadada</h3><p>Isticmaal xogtan si aad u ogaato dawooyinka u baahan dib-u-eegis. Nidaamku ma beddelayo baaritaanka farmashiistaha ama xaqiijinta hay'adaha dowladda.</p><button class="btn btn-outline" id="printBtn">Daabac warbixinta</button></div></div><div class="panel"><div class="panel-head"><div><h3>Liiska dawooyinka</h3><p>Dhammaan xogta la diiwaangeliyey.</p></div></div><div id="reportTable" class="table-wrap"></div></div></section>
+    <footer>© 2026 DaawoHubin <span>Badbaadada daawadu waa masuuliyad wadajir ah.</span></footer>
+  </main>
+</div>
+<div class="modal-backdrop hidden" id="medicineModal"><div class="modal"><div class="modal-head"><div><h3 id="modalTitle">Ku dar daawo cusub</h3><p>Geli xogta saxda ah ee baakadka.</p></div><button class="close-btn" id="closeModal">×</button></div><form id="medicineForm"><input type="hidden" name="id"><label>Magaca daawada <span>*</span><input name="name" required placeholder="Magaca daawada"></label><div class="form-row"><label>Batch number <span>*</span><input name="batch" required placeholder="Batch number"></label><label>Shirkadda<input name="manufacturer" placeholder="Shirkadda samaysay"></label></div><div class="form-row"><label>Taariikhda dhicitaanka <span>*</span><input name="expiry" type="date" required></label><label>Xaaladda<select name="status"><option value="verified">La xaqiijiyey</option><option value="suspicious">Laga shakisan yahay</option></select></label></div><label>Goobta laga keenay<input name="source" placeholder="Farmashiyaha / supplier"></label><div class="modal-actions"><button type="button" class="btn btn-outline" id="cancelModal">Jooji</button><button class="btn btn-primary" type="submit">Kaydi xogta</button></div></form></div></div>
+<div class="toast" id="toast"></div>
+<script src="js/app.js"></script>
+</body></html>

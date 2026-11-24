@@ -1,0 +1,46 @@
+const $ = (s, root=document) => root.querySelector(s);
+const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+const today = new Date(); today.setHours(0,0,0,0);
+const iso = d => {const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+const dateDiff = value => Math.ceil((new Date(value+'T00:00:00')-today)/86400000);
+const seed = [
+ {id:1,name:'Paracetamol 500mg',batch:'PCM-26041',manufacturer:'HealthCare Pharma',expiry:iso(new Date(Date.now()+1000*60*60*24*18)),status:'verified',source:'City Pharmacy'},
+ {id:2,name:'Amoxicillin 250mg',batch:'AMX-25018',manufacturer:'MediPlus Labs',expiry:iso(new Date(Date.now()+1000*60*60*24*75)),status:'verified',source:'Central Pharmacy'},
+ {id:3,name:'Vitamin C 1000mg',batch:'VTC-24008',manufacturer:'NutriMed',expiry:'2025-10-12',status:'verified',source:'Wellness Store'},
+ {id:4,name:'Cough Syrup 100ml',batch:'CS-99102',manufacturer:'Unknown supplier',expiry:iso(new Date(Date.now()+1000*60*60*24*210)),status:'suspicious',source:'Unregistered vendor'},
+ {id:5,name:'Ibuprofen 200mg',batch:'IBU-25076',manufacturer:'MedCare Ltd',expiry:iso(new Date(Date.now()+1000*60*60*24*8)),status:'verified',source:'City Pharmacy'},
+ {id:6,name:'Oral Rehydration Salts',batch:'ORS-26110',manufacturer:'LifeLabs',expiry:iso(new Date(Date.now()+1000*60*60*24*400)),status:'verified',source:'Central Pharmacy'}
+];
+let medicines = JSON.parse(localStorage.getItem('daawohubin_data')||'null') || seed;
+const save=()=>localStorage.setItem('daawohubin_data',JSON.stringify(medicines));
+const isExpired=m=>dateDiff(m.expiry)<0;
+const effectiveStatus=m=>isExpired(m)?'expired':m.status;
+const statusText=s=>({verified:'La xaqiijiyey',suspicious:'Laga shakisan yahay',expired:'Dhacay'})[s]||s;
+const fmt=d=>new Date(d+'T00:00:00').toLocaleDateString('so-SO',{day:'2-digit',month:'short',year:'numeric'});
+const badge=m=>`<span class="pill ${effectiveStatus(m)}">${statusText(effectiveStatus(m))}</span>`;
+const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function showToast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+function tableHTML(items,actions=false){if(!items.length)return '<div style="padding:28px;text-align:center;color:#9aa6a9;font-size:11px">Wax xog ah lama helin.</div>';return `<table><thead><tr><th>MAGACA DAAWADA</th><th>BATCH NO.</th><th>SHIRKADDA</th><th>DHICITAANKA</th><th>XAAALADDA</th>${actions?'<th>FALAL</th>':''}</tr></thead><tbody>${items.map(m=>`<tr><td><b>${escapeHTML(m.name)}</b></td><td>${escapeHTML(m.batch)}</td><td>${escapeHTML(m.manufacturer||'—')}</td><td>${fmt(m.expiry)}</td><td>${badge(m)}</td>${actions?`<td><button class="action-btn" data-edit="${m.id}">Wax ka beddel</button><button class="action-btn delete" data-delete="${m.id}">Tirtir</button></td>`:''}</tr>`).join('')}</tbody></table>`}
+function render(){const expired=medicines.filter(isExpired),verified=medicines.filter(m=>effectiveStatus(m)==='verified'),fake=medicines.filter(m=>effectiveStatus(m)==='suspicious'),soon=medicines.filter(m=>!isExpired(m)&&dateDiff(m.expiry)<=30).sort((a,b)=>a.expiry.localeCompare(b.expiry));
+ $('#statTotal').textContent=medicines.length;$('#statVerified').textContent=verified.length;$('#statExpired').textContent=expired.length;$('#statFake').textContent=fake.length;$('#alertCount').textContent=expired.length+soon.length+fake.length;
+ $('#dashboardExpiry').innerHTML=tableHTML(soon.slice(0,4));$('#expiryTable').innerHTML=tableHTML([...expired,...soon].sort((a,b)=>a.expiry.localeCompare(b.expiry)));$('#medicineTable').innerHTML=tableHTML(filteredMedicines(),true);$('#reportTable').innerHTML=tableHTML(medicines);
+ $('#expirySummary').innerHTML=`<div class="expiry-box"><span>Dhacay</span><strong style="color:#d6535b">${expired.length}</strong></div><div class="expiry-box"><span>30 maalmood gudahood</span><strong style="color:#c28b36">${soon.length}</strong></div><div class="expiry-box"><span>Weli waqti u haray</span><strong>${medicines.length-expired.length-soon.length}</strong></div>`;
+ const total=Math.max(medicines.length,1);$('#reportBars').innerHTML=[['La xaqiijiyey',verified.length,''],['Laga shakisan yahay',fake.length,'fake'],['Dhacay',expired.length,'exp']].map(([n,v,c])=>`<div class="bar-row"><span>${n}</span><div class="bar-track"><div class="bar-fill ${c}" style="width:${v/total*100}%"></div></div><b>${v}</b></div>`).join('');
+}
+function filteredMedicines(){const q=($('#medicineSearch')?.value||'').toLowerCase(),f=$('#statusFilter')?.value||'all';return medicines.filter(m=>[m.name,m.batch,m.manufacturer,m.source].join(' ').toLowerCase().includes(q)&&(f==='all'||effectiveStatus(m)===f))}
+function go(page){$$('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${page}`));$$('.nav-link').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('#pageTitle').textContent=({dashboard:'Guudmar',medicines:'Dawooyinka',verify:'Xaqiiji daawo',expiry:'Dhicitaanka',reports:'Warbixinno'})[page];$('#sidebar').classList.remove('open');if(page==='medicines')render()}
+$$('[data-page]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+$('#menuToggle').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));
+$('#todayLabel').textContent='DAAWOHUBIN / '+today.toLocaleDateString('so-SO',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+$('#medicineSearch').addEventListener('input',()=>$('#medicineTable').innerHTML=tableHTML(filteredMedicines(),true));
+$('#statusFilter').addEventListener('change',()=>$('#medicineTable').innerHTML=tableHTML(filteredMedicines(),true));
+const modal=$('#medicineModal');function openModal(m){$('#medicineForm').reset();$('#modalTitle').textContent=m?'Wax ka beddel daawo':'Ku dar daawo cusub';if(m)Object.entries(m).forEach(([k,v])=>{const el=$(`[name="${k}"]`,$('#medicineForm'));if(el)el.value=v});modal.classList.remove('hidden')}
+function closeModal(){modal.classList.add('hidden')}
+$('#addMedicineBtn').addEventListener('click',()=>openModal());$('#closeModal').addEventListener('click',closeModal);$('#cancelModal').addEventListener('click',closeModal);
+$('#medicineForm').addEventListener('submit',e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));if(d.id){medicines=medicines.map(m=>m.id==d.id?{...m,...d,id:Number(d.id)}:m)}else medicines.unshift({...d,id:Date.now()});save();render();closeModal();showToast('Xogta daawada waa la kaydiyey.')});
+document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit){const m=medicines.find(x=>x.id==edit.dataset.edit);openModal(m)}if(del){const m=medicines.find(x=>x.id==del.dataset.delete);if(confirm(`Ma hubtaa inaad tirtirayso ${m.name}?`)){medicines=medicines.filter(x=>x.id!=m.id);save();render();showToast('Daawada waa la tirtiray.')}}});
+$('#verifyForm').addEventListener('submit',e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));const match=medicines.find(m=>m.batch.toLowerCase()===d.batch.trim().toLowerCase());const result=$('#verifyResult');result.classList.remove('hidden','good','warn','bad');if(dateDiff(d.expiry)<0){result.classList.add('bad');result.innerHTML='<b>⚠ Daawadani way dhacday.</b><br>Ha isticmaalin. La xiriir farmashiistaha ama hay\'adda ku shaqada leh.'}else if(match&&effectiveStatus(match)==='verified'&&match.name.toLowerCase()===d.name.toLowerCase()){result.classList.add('good');result.innerHTML='<b>✓ Xogtu waxay la mid tahay diiwaanka demo-ga.</b><br>Batch number-ka iyo magaca waa is waafaqeen. Tani ma aha xaqiijin rasmi ah oo soo saaraha ama hay\'addu bixisay.'}else if(match||!d.batch){result.classList.add('warn');result.innerHTML='<b>! U baahan baaritaan dheeraad ah.</b><br>Xogta qaar lama waafajin diiwaanka demo-ga. La xiriir soo saaraha ama hay\'adda dawooyinka.'}else{result.classList.add('warn');result.innerHTML='<b>! Lama helin diiwaanka demo-ga.</b><br>Ma caddaynayso in daawadu been-abuur tahay. Hubi batch-ka oo la xiriir hay\'adda rasmiga ah.'}result.scrollIntoView({behavior:'smooth',block:'nearest'})});
+$('#exportBtn').addEventListener('click',()=>{const rows=[['Name','Batch','Manufacturer','Expiry','Status','Source'],...medicines.map(m=>[m.name,m.batch,m.manufacturer,m.expiry,statusText(effectiveStatus(m)),m.source])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}));a.download='DaawoHubin-report.csv';a.click();URL.revokeObjectURL(a.href);showToast('Warbixinta CSV waa la diyaariyey.')});
+$('#printBtn').addEventListener('click',()=>window.print());
+$('#notificationBtn').addEventListener('click',()=>{const n=medicines.filter(m=>isExpired(m)||dateDiff(m.expiry)<=30||effectiveStatus(m)==='suspicious').length;showToast(n?`${n} dawo ayaa u baahan in dib loo eego.`:'Ma jiraan digniino hadda.')});
+render();
